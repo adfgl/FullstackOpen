@@ -13,6 +13,14 @@ const Content = (props) => {
   )
 }
 
+const Total = (props) => {
+  return (
+    <p>
+      Numeber of exercises: {props.count}
+    </p>
+  )
+}
+
 const App = () => {
   const course = 'Half Stack application development'
   const content = [
@@ -32,7 +40,8 @@ const App = () => {
             />
         ))
       }
-      <p>Number of exercises {content.reduce((sum, part) => sum + part.count, 0)}</p>
+
+      <Total count = {content.reduce((sum, part) => sum + part.count, 0)}/>
     </div>
   )
 }
