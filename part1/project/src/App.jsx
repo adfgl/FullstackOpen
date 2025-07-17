@@ -6,42 +6,47 @@ const Header = (props) => {
 }
 
 const Content = (props) => {
+  const content = props.parts;
   return (
-    <p>
-        {props.name} {props.count}
-    </p>
+    <div>
+      <p>
+        {content[0].name} {content[0].exercises}
+      </p>
+
+      <p>
+        {content[1].name} {content[1].exercises}
+      </p>
+      
+      <p>
+        {content[2].name} {content[2].exercises}
+      </p>
+    </div>
   )
 }
 
 const Total = (props) => {
+  const content = props.parts;
+  const count = content.reduce((sum, part) => sum + part.exercises, 0)
   return (
     <p>
-      Numeber of exercises: {props.count}
+      Numeber of exercises: {count}
     </p>
   )
 }
 
 const App = () => {
   const course = 'Half Stack application development'
-  const content = [
-    { name: 'Fundamentals of React', count: 10 },
-    { name: 'Using props to pass data', count: 7 },
-    { name: 'State of a component', count: 14 }
+  const parts = [
+    { name: 'Fundamentals of React', exercises: 10 },
+    { name: 'Using props to pass data', exercises: 7 },
+    { name: 'State of a component', exercises: 14 }
   ]
+
   return (
     <div>
       <Header name = {course} />
-      {
-          content.map((element, index) => (
-            <Content 
-              key={index} 
-              name = {element.name} 
-              count = {element.count} 
-            />
-        ))
-      }
-
-      <Total count = {content.reduce((sum, part) => sum + part.count, 0)}/>
+      <Content parts = {parts} />
+      <Total parts = {parts}/>
     </div>
   )
 }
