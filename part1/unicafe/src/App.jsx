@@ -12,26 +12,41 @@ const Button = ({name, onClick}) => {
 
 const StatisticsLine = ({name, value, units}) => {
   return (
-    <p>{name} {value}{units === undefined ? "" : " " + units}</p>
+    <tr>
+      <td>{name}</td>
+      <td>{value}</td>
+      <td>{units}</td>
+    </tr>
   )
 } 
 
-const Statisctis = ({good, neutral, bad, all, average, positiveShare}) => {
+const Statistics = ({good, neutral, bad, all, average, positiveShare}) => {
+  const statistics = "statistics"
+  
+  if (all === 0) {
+    return (
+      <div>
+        <Header content={statistics}/>
+        <p>No feedback given</p>
+      </div>
+    )
+  }
+  
   return (
     <div>
-      <Header content={"Statistics"}/>
-      {all > 0 ? (
-        <>
+      <Header content={statistics}/>
+
+      <table>
+        <tbody>
           <StatisticsLine name={"good"} value={good} />
           <StatisticsLine name={"neutral"} value={neutral} />
           <StatisticsLine name={"bad"} value={bad} />
           <StatisticsLine name={"all"} value={all} />
           <StatisticsLine name={"average"} value={average} />
           <StatisticsLine name={"positive"} value={positiveShare} units={"%"} />
-        </>
-      ) : (
-        <p>No feedback given</p>
-      )}
+        </tbody>
+      </table>
+    
     </div>
   )
 }
@@ -116,12 +131,13 @@ function App() {
       <Button name={nameNeutral} onClick={handleNeutral}/>
       <Button name={nameBad} onClick={handleBad}/>
       
-      <Statisctis 
+      <Statistics  
         good={good} 
         bad={bad}
         neutral={neutral}
         all={all}
-        positiveShare={positiveShare}/>
+        average={average.toFixed(1)}
+        positiveShare={positiveShare.toFixed(1)}/>
     </div>
   )
 }
