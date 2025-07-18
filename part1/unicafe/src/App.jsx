@@ -31,6 +31,17 @@ function App() {
   const nameNeutral = "neutral"
   const nameBad = "bad"
 
+  const data = {
+    "goodCount": 0,
+    "neutralCount": 0,
+    "badCount": 0,
+    "allCount": 0,
+    "average": 0.0,
+    "positiveShare": 0.0
+  }
+
+  //const [state, setState] = useState(data)
+
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
@@ -86,12 +97,19 @@ function App() {
       <Button name={nameBad} onClick={handleBad}/>
       
       <Header content={"Statistics"}/>
-      <Display name={nameGood} value={good}/>
-      <Display name={nameNeutral} value={neutral}/>
-      <Display name={nameBad} value={bad}/>
-      <Display name={"all"} value={all}/>
-      <Display name={"average"} value={average}/>
-      <Display name={"positive"} value={positiveShare} units={"%"}/>
+
+      {all > 0 ? (
+      <>
+        <Display name={nameGood} value={good} />
+        <Display name={nameNeutral} value={neutral} />
+        <Display name={nameBad} value={bad} />
+        <Display name={"all"} value={all} />
+        <Display name={"average"} value={average} />
+        <Display name={"positive"} value={positiveShare} units={"%"} />
+      </>
+    ) : (
+      <p>No feedback given</p>
+    )}
     </div>
   )
 }
