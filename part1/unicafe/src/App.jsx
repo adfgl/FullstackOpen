@@ -10,11 +10,31 @@ const Button = ({name, onClick}) => {
   )
 }
 
-const Display = ({name, value, units}) => {
+const StatisticsLine = ({name, value, units}) => {
   return (
     <p>{name} {value}{units === undefined ? "" : " " + units}</p>
   )
 } 
+
+const Statisctis = ({good, neutral, bad, all, average, positiveShare}) => {
+  return (
+    <div>
+      <Header content={"Statistics"}/>
+      {all > 0 ? (
+        <>
+          <StatisticsLine name={"good"} value={good} />
+          <StatisticsLine name={"neutral"} value={neutral} />
+          <StatisticsLine name={"bad"} value={bad} />
+          <StatisticsLine name={"all"} value={all} />
+          <StatisticsLine name={"average"} value={average} />
+          <StatisticsLine name={"positive"} value={positiveShare} units={"%"} />
+        </>
+      ) : (
+        <p>No feedback given</p>
+      )}
+    </div>
+  )
+}
 
 const Header = ({content}) => {
   return (
@@ -96,20 +116,12 @@ function App() {
       <Button name={nameNeutral} onClick={handleNeutral}/>
       <Button name={nameBad} onClick={handleBad}/>
       
-      <Header content={"Statistics"}/>
-
-      {all > 0 ? (
-      <>
-        <Display name={nameGood} value={good} />
-        <Display name={nameNeutral} value={neutral} />
-        <Display name={nameBad} value={bad} />
-        <Display name={"all"} value={all} />
-        <Display name={"average"} value={average} />
-        <Display name={"positive"} value={positiveShare} units={"%"} />
-      </>
-    ) : (
-      <p>No feedback given</p>
-    )}
+      <Statisctis 
+        good={good} 
+        bad={bad}
+        neutral={neutral}
+        all={all}
+        positiveShare={positiveShare}/>
     </div>
   )
 }
