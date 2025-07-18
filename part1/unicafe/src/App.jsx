@@ -10,6 +10,12 @@ const Button = ({name, onClick}) => {
   )
 }
 
+function Header({content}) {
+  return (
+    <h1>{content}</h1>
+  )
+}
+
 const StatisticsLine = ({name, value, units}) => {
   return (
     <tr>
@@ -20,9 +26,11 @@ const StatisticsLine = ({name, value, units}) => {
   )
 } 
 
-const Statistics = ({good, neutral, bad, all, average, positiveShare}) => {
+const Statistics = ({good, neutral, bad}) => {
   const statistics = "statistics"
   
+  const all = good + neutral + bad
+
   if (all === 0) {
     return (
       <div>
@@ -31,29 +39,35 @@ const Statistics = ({good, neutral, bad, all, average, positiveShare}) => {
       </div>
     )
   }
-  
-  return (
+
+  const average = ((good - bad) / all).toFixed(1)
+  const positiveShare = ((good / all) * 100).toFixed(1)
+
+  const data = [
+    { name: 'good', value: good },
+    { name: 'neutral', value: neutral },
+    { name: 'bad', value: bad },
+    { name: 'all', value: all },
+    { name: 'average', value: average },
+    { name: 'positive', value: positiveShare, units: '%' }
+  ]
+
+   return (
     <div>
       <Header content={statistics}/>
-
       <table>
         <tbody>
-          <StatisticsLine name={"good"} value={good} />
-          <StatisticsLine name={"neutral"} value={neutral} />
-          <StatisticsLine name={"bad"} value={bad} />
-          <StatisticsLine name={"all"} value={all} />
-          <StatisticsLine name={"average"} value={average} />
-          <StatisticsLine name={"positive"} value={positiveShare} units={"%"} />
+          {data.map((line) => (
+            <StatisticsLine
+              key={line.name}
+              name={line.name}
+              value={line.value}
+              units={line.units}
+            />
+          ))}
         </tbody>
       </table>
-    
     </div>
-  )
-}
-
-const Header = ({content}) => {
-  return (
-    <h1>{content}</h1>
   )
 }
 
@@ -62,82 +76,36 @@ function App() {
   const scoreNeutral = 0;
   const scoreBad = -1;
 
-  const nameGood = "good"
-  const nameNeutral = "neutral"
-  const nameBad = "bad"
-
-  const data = {
-    "goodCount": 0,
-    "neutralCount": 0,
-    "badCount": 0,
-    "allCount": 0,
-    "average": 0.0,
-    "positiveShare": 0.0
-  }
-
-  //const [state, setState] = useState(data)
-
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
-  const [all, setAll] = useState(0)
-  const [average, setAverage] = useState(0.0)
-  const [positiveShare, setPositiveShare] = useState(0.0)
-
-  const calcAverage = (good, neutral, bad) => {
-    const count = good + neutral + bad;
-    if (count === 0) return 0;
-    return (
-      good * scoreGood + 
-      neutral * scoreNeutral +
-      bad * scoreBad
-    ) / count;
-  }
-
-  const calcPositiveShare = (good, neutral, bad) => {
-    const count = good + neutral + bad;
-    if (count === 0) return 0;
-    return good / count * 100
-  }
 
   const handleGood = () => {
     const updated = good + 1;
     setGood(updated)
-    setAll(updated + neutral + bad);
-    setAverage(calcAverage(updated, neutral, bad))
-    setPositiveShare(calcPositiveShare(updated, neutral, bad))
   }
 
   const handleNeutral = () => {
     const updated = neutral + 1;
     setNeutral(updated);
-    setAll(good + updated + bad);
-    setAverage(calcAverage(good, updated, bad));
-    setPositiveShare(calcPositiveShare(good, updated, bad))
   };
 
   const handleBad = () => {
     const updated = bad + 1;
     setBad(updated);
-    setAll(good + neutral + updated);
-    setAverage(calcAverage(good, neutral, updated));
-    setPositiveShare(calcPositiveShare(good, neutral, updated))
   };
 
   return (
     <div>
       <Header content={"Give feedback"}/>
-      <Button name={nameGood} onClick={handleGood}/>
-      <Button name={nameNeutral} onClick={handleNeutral}/>
-      <Button name={nameBad} onClick={handleBad}/>
+      <Button name={"good"} onClick={handleGood}/>
+      <Button name={"neutral"} onClick={handleNeutral}/>
+      <Button name={"bad"} onClick={handleBad}/>
       
       <Statistics  
         good={good} 
         bad={bad}
-        neutral={neutral}
-        all={all}
-        average={average.toFixed(1)}
-        positiveShare={positiveShare.toFixed(1)}/>
+        neutral={neutral}/>
     </div>
   )
 }

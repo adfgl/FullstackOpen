@@ -2,6 +2,12 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 
+function Header({content}) {
+  return (
+    <h1>{content}</h1>
+  )
+}
+
 function Button({name, onClick}) {
   return (
     <button onClick = {onClick}>
@@ -10,8 +16,30 @@ function Button({name, onClick}) {
   )
 }
 
+function Anecdote({content, votes}) {
+  return (
+    <div>
+      <p>{content}</p>
+      <p>has {votes} votes</p>
+    </div>
+
+  )
+}
+
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function getMaxIndex(array) {
+  if (array.length === 0) return -1;
+
+  let maxIndex = array[0]
+  for (let i = 1; i < array.length; i++) {
+    if (array[maxIndex] < array[i]) {
+      maxIndex = i;
+    }
+  }
+  return maxIndex;
 }
 
 function App() {
@@ -27,29 +55,35 @@ function App() {
   ]
 
   const [selected, setSelected] = useState(0)
-  const [selectedVotes, setSelectedVotes] = useState(0)
-  const [votes, setVotes] = useState(Array(anecdotes.length).fill(0));
-
+  const [maxIndex, setMaxIndex] = useState(0)
+  const [votes, setVotes] = useState(Array(anecdotes.length).fill(0))
 
   const setNext = () => {
     const next = getRandomInt(0, anecdotes.length)
     setSelected(next)
-    setSelectedVotes(votes[next])
   }
 
-  const upvote = (selected) => {
-    const copy = [...votes];
-    copy[selected] += 1;
-    setVotes(copy);
-    setSelectedVotes(copy[selected]);
+  const upvote = () => {
+    const copy = [...votes]
+    copy[selected] += 1
+
+    if (selected !== maxIndex) {
+      const max = getMaxIndex(copy);
+      setMaxIndex(max)
+    }
+    setVotes(copy)
   }
 
   return (
     <div>
-      <p>{anecdotes[selected]}</p>
-      <p>{"has " + selectedVotes + " votes"}</p>
-      <Button name={"vote"} onClick={() => upvote(selected)}/>
-      <Button name={"next anecdote"} onClick={setNext}/>
+      <Header content="Anecdote of the day" />
+      <Anecdote content={anecdotes[selected]} votes={votes[selected]}/>
+
+      <Button name="vote" onClick={upvote} />
+      <Button name="next anecdote" onClick={setNext} />
+
+      <Header content="Anecdote with most votes" />
+      <Anecdote content={anecdotes[maxIndex]} votes={votes[maxIndex]}/>
     </div>
   )
 }
