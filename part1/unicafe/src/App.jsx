@@ -30,7 +30,6 @@ const Statistics = ({good, neutral, bad}) => {
   const statistics = "statistics"
   
   const all = good + neutral + bad
-
   if (all === 0) {
     return (
       <div>
@@ -48,14 +47,13 @@ const Statistics = ({good, neutral, bad}) => {
   const positiveShare = ((good / all) * 100).toFixed(1)
 
   const data = [
-    { name: 'good', value: good },
-    { name: 'neutral', value: neutral },
-    { name: 'bad', value: bad },
-    { name: 'all', value: all },
-    { name: 'average', value: average },
-    { name: 'positive', value: positiveShare, units: '%' }
+    { name: "good", value: good },
+    { name: "neutral", value: neutral },
+    { name: "bad", value: bad },
+    { name: "all", value: all },
+    { name: "average", value: average },
+    { name: "positive", value: positiveShare, units: '%' }
   ]
-
    return (
     <div>
       <Header content={statistics}/>
@@ -87,10 +85,7 @@ function App() {
       <Button name={"neutral"} onClick={() => setNeutral(neutral + 1)}/>
       <Button name={"bad"} onClick={() => setBad(bad + 1)}/>
       
-      <Statistics  
-        good={good} 
-        bad={bad}
-        neutral={neutral}/>
+      <Statistics good={good} bad={bad} neutral={neutral}/>
     </div>
   )
 }
