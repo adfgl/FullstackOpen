@@ -10,9 +10,9 @@ const Button = ({name, onClick}) => {
   )
 }
 
-const Display = ({name, count, units}) => {
+const Display = ({name, value, units}) => {
   return (
-    <p>{name} {count}{units === undefined ? "" : units}</p>
+    <p>{name} {value}{units === undefined ? "" : " " + units}</p>
   )
 } 
 
@@ -34,7 +34,9 @@ function App() {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
+  const [all, setAll] = useState(0)
   const [average, setAverage] = useState(0.0)
+  const [positiveShare, setPositiveShare] = useState(0.0)
 
   const calcAverage = (good, neutral, bad) => {
     const count = good + neutral + bad;
@@ -46,22 +48,34 @@ function App() {
     ) / count;
   }
 
+  const calcPositiveShare = (good, neutral, bad) => {
+    const count = good + neutral + bad;
+    if (count === 0) return 0;
+    return good / count * 100
+  }
+
   const handleGood = () => {
     const updated = good + 1;
     setGood(updated)
+    setAll(updated + neutral + bad);
     setAverage(calcAverage(updated, neutral, bad))
+    setPositiveShare(calcPositiveShare(updated, neutral, bad))
   }
 
   const handleNeutral = () => {
     const updated = neutral + 1;
     setNeutral(updated);
+    setAll(good + updated + bad);
     setAverage(calcAverage(good, updated, bad));
+    setPositiveShare(calcPositiveShare(good, updated, bad))
   };
 
   const handleBad = () => {
     const updated = bad + 1;
     setBad(updated);
+    setAll(good + neutral + updated);
     setAverage(calcAverage(good, neutral, updated));
+    setPositiveShare(calcPositiveShare(good, neutral, updated))
   };
 
   return (
@@ -72,10 +86,12 @@ function App() {
       <Button name={nameBad} onClick={handleBad}/>
       
       <Header content={"Statistics"}/>
-      <Display name={nameGood} count={good}/>
-      <Display name={nameNeutral} count={neutral}/>
-      <Display name={nameBad} count={bad}/>
-      <Display name={"average"} count={average}/>
+      <Display name={nameGood} value={good}/>
+      <Display name={nameNeutral} value={neutral}/>
+      <Display name={nameBad} value={bad}/>
+      <Display name={"all"} value={all}/>
+      <Display name={"average"} value={average}/>
+      <Display name={"positive"} value={positiveShare} units={"%"}/>
     </div>
   )
 }
