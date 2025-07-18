@@ -2,6 +2,18 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 
+function Button({name, onClick}) {
+  return (
+    <button onClick = {onClick}>
+      {name}
+    </button>
+  )
+}
+
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
 function App() {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -16,10 +28,16 @@ function App() {
 
   const [selected, setSelected] = useState(0)
 
+  const setNext = () => {
+    const next = getRandomInt(0, anecdotes.length)
+    setSelected(next)
+  }
+
   return (
-    <>
-      {anecdotes[selected]}
-    </>
+    <div>
+      <p>{anecdotes[selected]}</p>
+      <Button name={"next anecdote"} onClick={setNext}/>
+    </div>
   )
 }
 
